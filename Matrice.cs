@@ -21,10 +21,7 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
         public Pixel2 [,] Matrix
         {
             get => this.matrix;
-            set
-            {
-                matrix = value;    
-            }
+            set { matrix = value; }
         }
     }
 }
