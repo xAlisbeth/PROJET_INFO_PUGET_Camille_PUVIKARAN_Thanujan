@@ -9,7 +9,6 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
 {
     class MyImage
     {
-
         // attributes
         private int[] type;
         private int length;
@@ -25,9 +24,7 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
         // constructor
         public MyImage(string Myfile)
         {
-
             ReadFile(Myfile);
-
         }
 
         // properties
@@ -50,63 +47,24 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
         public int Color
         {
             get => this.color;
-            set
-            {
-                this.color = value;
-            }
+            set { this.color = value; }
         }
         public Matrice M
         {
             get => this.m;
-            set
-            {
-                this.m = value;
-            }
+            set { this.m = value; }
         }
-
-        public int[] finding_type(byte[] file)
-        {
-            this.type = new int[3];
-            if ((file[0] == 66) && (file[1] == 77))
-            {
-                this.type[0] = 18;
-                this.type[1] = 22;
-                this.type[2] = 14;
-                this.offset = 54;
-            }
-            return this.type;
-        }
+        
+        //                                  METHODS
+        
         /// <summary>
-        /// Take a tab
+        /// This method reads the image (here called filename) and all of its data is concealed in the byte array file.
+        /// Then, we just write on the console all of the header informations, and create a matrix containing all of the image's pixels.
+        /// For that, we created the class Pixel2.
         /// </summary>
-        /// <param name="tab"></param>
-        /// <returns></returns>
-        public int Taille(int[] tab)
-        {
-            int taille = 0;
-            for (int i = 0; i < tab.Length; i++)
-            {
-                taille += tab[i] * Convert.ToInt32(Math.Pow(256, i));
-
-            }
-            return taille;
-        }
-        public int[] newLength(byte[] file, int debut)
-        {
-            int[] tab = new int[4];
-            for (int i = debut; i < debut + 4; i++)
-            {
-                tab[i - debut] = file[i];
-            }
-            return tab;
-        }
-        /// <summary>
-        /// from file to image
-        /// </summary>
-        /// <param name="filename"></param>
+        /// <param name="filename">name of the file (here, an image) we want to read</param>
         public void ReadFile(string filename)
-        {
-           
+        {           
             //Console.WriteLine();
             byte[] file = File.ReadAllBytes(filename);
 
@@ -138,13 +96,8 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             this.m = new Matrice(Matrix);
             //Console.WriteLine("this.Width = " + this.width);
             //Console.WriteLine("this.Height = " + this.height);
-
-
-
-
-
-
-            //L'image elle-même
+            
+            // L'image elle-même
             //Console.WriteLine("\n IMAGE \n");
 
             for (int i = this.offset; i < file.Length; i = i + 3 * this.height)
@@ -160,14 +113,15 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
                 }
                // Console.WriteLine();
             }
-
-
-
         }
-
+        
+        /// <summary>
+        /// ...
+        /// </summary>
+        /// <param name="Mat">name of the matrix (composed of pixels) we want to read</param>
+        /// <param name="file">name of the file (here, an image) we return</param>
         public void From_Image_To_File(Pixel2[,] Mat, string file)
         {
-
             byte[] returned = new byte[this.header.Length + (Mat.GetLength(0) * Mat.GetLength(1) * 3)];
             //Console.Write("sdkdhksdhf");
             //Console.WriteLine("Mat.GetLength(0) = " + Mat.GetLength(0));
@@ -190,13 +144,8 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
                 {
                     returned[i] = this.header[i];
                     //Console.Write(returned[i] + " ");
-                }
-                
+                }                
             }
-            
-
-
-
             //Mat = new Pixel2[this.m.Matrix.GetLength(0), this.m.Matrix.GetLength(1)];
 
             int compteur = 0;
@@ -204,7 +153,6 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             {
                 for (int j = 0; j < Mat.GetLength(1); j++)
                 {
-
                     returned[this.header.Length + compteur] = Mat[i, j].Blue;
                     returned[this.header.Length + compteur + 1] = Mat[i, j].Green;
                     returned[this.header.Length + compteur + 2] = Mat[i, j].Red;
@@ -212,12 +160,9 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
                     //Console.Write(this.m.Matrix[i, j].Blue+" ");
                     //Console.Write(this.m.Matrix[i, j].Green+" ");
                     //Console.Write(this.m.Matrix[i, j].Red+" ");
-
-
-                }
-                
+                }                
             }
-
+            
             //for (int i = 0; i < returned.Length; i++)
             //{
             //    //Console.Write(returned[i]+" ");
@@ -232,6 +177,80 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             Console.WriteLine("ARRIVEE !");
             File.WriteAllBytes(file, returned);
         }
+
+        /// <summary>
+        /// Take the array of all of the image's bytes to check the type
+        /// of the image by reading the value of some of the array's elements.
+        ///
+        /// The "this.offset" line precises the beginning at which me must start filling the matrix of pixels.
+        /// </summary>
+        /// <param name="file">array of bytes which will be made of every of the image's bytes</param>
+        /// <returns>returns an array containing the infos about the size of the image which was just read before</returns>
+        public int[] finding_type(byte[] file)
+        {
+            this.type = new int[3];
+            if ((file[0] == 66) && (file[1] == 77))
+            {
+                this.type[0] = 18;
+                this.type[1] = 22;
+                this.type[2] = 14;
+                this.offset = 54;
+            }
+            return this.type;
+        }
+        
+        /// <summary>
+        /// Take an array containing all of the image's bytes, and a integer indicating the start of the four bytes containing the image's size.
+        /// </summary>
+        /// <param name="file">array containing all of the image's bytes</param>
+        /// <param name="debut">integer indicating the start of the four bytes containing the image's size</param>
+        /// <returns>an array with the four bytes of the image's size</returns>
+        public int[] newLength(byte[] file, int debut)
+        {
+            int[] tab = new int[4];
+            for (int i = debut; i < debut + 4; i++)
+            {
+                tab[i - debut] = file[i];
+            }
+            return tab;
+        }
+        
+        /// <summary>
+        /// This method takes an array containing the four bytes of the image's size and converts it into a decimal number.
+        /// </summary>
+        /// <param name="tab">array containing the four bytes with the image's size</param>
+        /// <returns>an integer which is the number of pixels in the image</returns>
+        public int Taille(int[] tab)
+        {
+            int taille = 0;
+            for (int i = 0; i < tab.Length; i++)
+            {
+                taille += tab[i] * Convert.ToInt32(Math.Pow(256, i));
+
+            }
+            return taille;
+        }
+        
+        /// <summary>
+        /// This method checks that the angle is between 0 and 360°.
+        /// </summary>
+        /// <param name="angle">angle at which you wish to turn your image</param>
+        /// <returns>an angle somewhere between 0 and 360°</returns>
+        //public int verification_angle(int angle)
+        //{
+        //    while ((angle < 0) || (angle > 360))
+        //    {
+        //        if (angle < 0)  angle += 360;
+        //        else if (angle > 360) angle -= 360;
+        //    }
+        //    return angle;
+        //}
+        
+        /// <summary>
+        /// This method converts an integer into a endian number.
+        /// </summary>
+        /// <param name="value">value in integer</param>
+        /// <returns>a byte array containing the bytes of the endian number</returns>
         public byte[] Convertir_Int_To_Endian(int value)
         {
             byte[] tab = new byte[4];
@@ -247,31 +266,139 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             }
             return tab;
         }
-        //public int verification_angle(int angle)
-        //{
-        //    while ((angle < 0) || (angle > 360))
-        //    {
-        //        if (angle < 0)
-        //        {
-        //            angle += 360;
-        //        }
-        //        else if (angle > 360)
-        //        {
-        //            angle -= 360;
-        //        }
-        //    }
-        //    return angle;
+        
+        
+        // The following methods are used to manipulate the image:
+        
+        /// <summary>
+        /// This method reverses the colors of the image.
+        /// </summary>
+        /// <returns>a matrix containing the pixel of the new image</returns>
+        public Pixel2[,] negatif()
+        {
+            Pixel2[,] Mat3 = new Pixel2[m.Matrix.GetLength(0), m.Matrix.GetLength(1)];
+            for (int i = 0; i < Mat3.GetLength(0); i++)
+            {
+                for (int j = 0; j < Mat3.GetLength(1); j++)
+                {
+                    int b = 255 - Convert.ToInt32(m.Matrix[i, j].Blue);
+                    int g = 255 - Convert.ToInt32(m.Matrix[i, j].Green);
+                    int r = 255 - Convert.ToInt32(m.Matrix[i, j].Red);
 
-        //}
-        //public bool verification(Pixel2[,] mat, int i, int j)
-        //{
-        //    bool flag = true;
-        //    if (mat[i, j] == null)
-        //    {
-        //        flag = false;
-        //    }
-        //    return flag;
-        //}
+                    Mat3[i, j] = new Pixel2(Convert.ToByte(b), Convert.ToByte(g), Convert.ToByte(r));
+                }
+            }
+            return Mat3;
+        }
+        
+        /// <summary>
+        /// This method rotates the image by 90°.
+        /// </summary>
+        /// <returns>a matrix containing the pixel of a new image, rotated by 90°</returns>
+        public Pixel2[,] Rotation90()
+        {
+            Pixel2[,] Mat6 = new Pixel2[m.Matrix.GetLength(1), m.Matrix.GetLength(0)];
+            Pixel2[,] MatP = new Pixel2[m.Matrix.GetLength(1), m.Matrix.GetLength(0)];
+
+            for (int i = 0; i < m.Matrix.GetLength(1); i++)
+            {
+                for (int j = 0; j < m.Matrix.GetLength(0); j++)
+                {
+                    if (((i <= this.height / 2) && (j >= this.width / 2)) || ((i >= this.height / 2) && (j <= this.width / 2)))
+                    {
+                        MatP[i, j] = new Pixel2(m.Matrix[this.width - j - 1, this.height - 1 - i].Blue, m.Matrix[this.width - j - 1, this.height - 1 - i].Green, m.Matrix[this.width - j - 1, this.height - 1 - i].Red);
+                    }
+                    else if (((i < this.height / 2) && (j < this.width / 2)) || ((i > this.height / 2) && (j > this.width / 2)))
+                    {
+                        MatP[i, j] = new Pixel2(m.Matrix[this.width - j - 1, this.height - 1 - i].Blue, m.Matrix[this.width - j - 1, this.height - 1 - i].Green, m.Matrix[this.width - j - 1, this.height - 1 - i].Red);
+                    }
+                }
+            }
+
+            for (int i = 0; i < m.Matrix.GetLength(1); i++)
+            {
+                for (int j = 0; j < m.Matrix.GetLength(0); j++)
+                {
+                    Mat6[i, j] = new Pixel2(MatP[this.height - 1 - i, j].Blue, MatP[this.height - 1 - i, j].Green, MatP[this.height - 1 - i, j].Red);
+                }
+            }
+
+            return Mat6;
+        }
+                
+        /// <summary>
+        /// This method rotates the image by 180°.
+        /// </summary>
+        /// <returns>a matrix containing the pixel of a new image, rotated by 180°</returns>
+        public Pixel2[,] Rotation180()
+        {
+            int[] centre = new int[2];
+            centre[0] = this.width / 2;
+            centre[1] = this.height / 2;
+            Pixel2[,] Mat4 = new Pixel2[m.Matrix.GetLength(0), m.Matrix.GetLength(1)];
+            
+            for (int i = 0; i < m.Matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < m.Matrix.GetLength(1); j++)
+                {
+                    if (((i <= this.height / 2) && (j >= this.width / 2)) || ((i >= this.height / 2) && (j <= this.width / 2)))
+                    {
+                        Mat4[i, j] = new Pixel2(m.Matrix[this.width - i - 1, this.height - 1 - j].Blue, m.Matrix[this.width - i - 1, this.height - 1 - j].Green, m.Matrix[this.width - i - 1, this.height - 1 - j].Red);
+                    }
+                    else if (((i < this.height / 2) && (j < this.width / 2)) || ((i > this.height / 2) && (j > this.width / 2)))
+                    {
+                        Mat4[i, j] = new Pixel2(m.Matrix[this.width - i - 1, this.height - 1 - j].Blue, m.Matrix[this.width - i - 1, this.height - 1 - j].Green, m.Matrix[this.width - i - 1, this.height - 1 - j].Red);
+                    }
+                }
+            }
+            
+            return Mat4;
+        }        
+
+        /// <summary>
+        /// This method rotates the image by 270°.
+        /// </summary>
+        /// <returns>a matrix containing the pixel of a new image, rotated by 270°</returns>
+        public Pixel2[,] Rotation270()
+        {
+            Pixel2[,] M = new Pixel2[m.Matrix.GetLength(1), m.Matrix.GetLength(0)];
+            Pixel2[,] M2 = new Pixel2[m.Matrix.GetLength(0), m.Matrix.GetLength(1)];
+            Pixel2[,] Mat7 = new Pixel2[m.Matrix.GetLength(1), m.Matrix.GetLength(0)];
+            M = Rotation90();
+            M2 = Rotation90();
+            Mat7 = Rotation90();
+            
+            for (int i = 0; i < m.Matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < m.Matrix.GetLength(1); j++)
+                {
+                    Mat7[i, j] = new Pixel2(m.Matrix[this.height - 1 - i, j].Blue, m.Matrix[this.height - 1 - i, j].Green, m.Matrix[this.height - 1 - i, j].Red);
+                }
+            }
+            
+            for (int i = 0; i < m.Matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < m.Matrix.GetLength(1); j++)
+                {
+                    if (((i <= this.height / 2) && (j >= this.width / 2)) || ((i >= this.height / 2) && (j <= this.width / 2)))
+                    {
+                        M[i, j] = new Pixel2(Mat7[this.width - j - 1, this.height - 1 - i].Blue, Mat7[this.width - j - 1, this.height - 1 - i].Green, Mat7[this.width - j - 1, this.height - 1 - i].Red);
+                    }
+                    else if (((i < this.height / 2) && (j < this.width / 2)) || ((i > this.height / 2) && (j > this.width / 2)))
+                    {
+                        M[i, j] = new Pixel2(Mat7[this.width - j - 1, this.height - 1 - i].Blue, Mat7[this.width - j - 1, this.height - 1 - i].Green, Mat7[this.width - j - 1, this.height - 1 - i].Red);
+                    }
+                }
+            }
+            return M;
+            
+        }
+        
+        /// <summary>
+        /// This method rotates the image by an angle chosen by the user.
+        /// </summary>
+        /// <returns>a matrix containing the pixel of the new image</returns>
+        /// <param name="angle">angle at which you wish to turn your image</param>
         //public Pixel2[,] rotate_with_angles(int angle)
         //{
         //    //int[] centre = new int[2];
@@ -349,137 +476,24 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             
         //    return Mat2;
         //}
-
-        public Pixel2[,] negatif()
-        {
-            Pixel2[,] Mat3 = new Pixel2[m.Matrix.GetLength(0), m.Matrix.GetLength(1)];
-            for (int i = 0; i < Mat3.GetLength(0); i++)
-            {
-                for (int j = 0; j < Mat3.GetLength(1); j++)
-                {
-                    int b = 255 - Convert.ToInt32(m.Matrix[i, j].Blue);
-                    int g = 255 - Convert.ToInt32(m.Matrix[i, j].Green);
-                    int r = 255 - Convert.ToInt32(m.Matrix[i, j].Red);
-
-                    Mat3[i, j] = new Pixel2(Convert.ToByte(b), Convert.ToByte(g), Convert.ToByte(r));
-                }
-            }
-            return Mat3;
-        }
-        ///uint pour les entiers non signés
-        //public byte convert()
-        public Pixel2[,] Rotation180()
-        {
-            int[] centre = new int[2];
-            centre[0] = this.width / 2;
-            centre[1] = this.height / 2;
-            Pixel2[,] Mat4 = new Pixel2[m.Matrix.GetLength(0), m.Matrix.GetLength(1)];
-            for (int i = 0; i < m.Matrix.GetLength(0); i++)
-            {
-                for (int j = 0; j < m.Matrix.GetLength(1); j++)
-                {
-                    if (((i <= this.height / 2) && (j >= this.width / 2)) || ((i >= this.height / 2) && (j <= this.width / 2)))
-                    {
-                        Mat4[i, j] = new Pixel2(m.Matrix[this.width - i - 1, this.height - 1 - j].Blue, m.Matrix[this.width - i - 1, this.height - 1 - j].Green, m.Matrix[this.width - i - 1, this.height - 1 - j].Red);
-                    }
-                    else if (((i < this.height / 2) && (j < this.width / 2)) || ((i > this.height / 2) && (j > this.width / 2)))
-                    {
-
-                        Mat4[i, j] = new Pixel2(m.Matrix[this.width - i - 1, this.height - 1 - j].Blue, m.Matrix[this.width - i - 1, this.height - 1 - j].Green, m.Matrix[this.width - i - 1, this.height - 1 - j].Red);
-
-                    }
-                }
-            }
-            return Mat4;
-        }
-        public Pixel2[,] Rotation90()
-        {
-
-            Pixel2[,] Mat6 = new Pixel2[m.Matrix.GetLength(1), m.Matrix.GetLength(0)];
-            Pixel2[,] MatP = new Pixel2[m.Matrix.GetLength(1), m.Matrix.GetLength(0)];
-
-            for (int i = 0; i < m.Matrix.GetLength(1); i++)
-            {
-                for (int j = 0; j < m.Matrix.GetLength(0); j++)
-                {
-                    if (((i <= this.height / 2) && (j >= this.width / 2)) || ((i >= this.height / 2) && (j <= this.width / 2)))
-                    {
-                        MatP[i, j] = new Pixel2(m.Matrix[this.width - j - 1, this.height - 1 - i].Blue, m.Matrix[this.width - j - 1, this.height - 1 - i].Green, m.Matrix[this.width - j - 1, this.height - 1 - i].Red);
-                    }
-                    else if (((i < this.height / 2) && (j < this.width / 2)) || ((i > this.height / 2) && (j > this.width / 2)))
-                    {
-
-                        MatP[i, j] = new Pixel2(m.Matrix[this.width - j - 1, this.height - 1 - i].Blue, m.Matrix[this.width - j - 1, this.height - 1 - i].Green, m.Matrix[this.width - j - 1, this.height - 1 - i].Red);
-
-                    }
-                }
-            }
-
-            for (int i = 0; i < m.Matrix.GetLength(1); i++)
-            {
-                for (int j = 0; j < m.Matrix.GetLength(0); j++)
-                {
-                    Mat6[i, j] = new Pixel2(MatP[this.height - 1 - i, j].Blue, MatP[this.height - 1 - i, j].Green, MatP[this.height - 1 - i, j].Red);
-                }
-            }
-
-            return Mat6;
-
-        }
-
-        public Pixel2[,] Rotation270()
-        {
-            Pixel2[,] M = new Pixel2[m.Matrix.GetLength(1), m.Matrix.GetLength(0)];
-            Pixel2[,] M2 = new Pixel2[m.Matrix.GetLength(0), m.Matrix.GetLength(1)];
-            Pixel2[,] Mat7 = new Pixel2[m.Matrix.GetLength(1), m.Matrix.GetLength(0)];
-            M = Rotation90();
-            M2 = Rotation90();
-            Mat7 = Rotation90();
-            for (int i = 0; i < m.Matrix.GetLength(0); i++)
-            {
-                for (int j = 0; j < m.Matrix.GetLength(1); j++)
-                {
-                    Mat7[i, j] = new Pixel2(m.Matrix[this.height - 1 - i, j].Blue, m.Matrix[this.height - 1 - i, j].Green, m.Matrix[this.height - 1 - i, j].Red);
-                }
-            }
-            for (int i = 0; i < m.Matrix.GetLength(0); i++)
-            {
-                for (int j = 0; j < m.Matrix.GetLength(1); j++)
-                {
-                    if (((i <= this.height / 2) && (j >= this.width / 2)) || ((i >= this.height / 2) && (j <= this.width / 2)))
-                    {
-                        M[i, j] = new Pixel2(Mat7[this.width - j - 1, this.height - 1 - i].Blue, Mat7[this.width - j - 1, this.height - 1 - i].Green, Mat7[this.width - j - 1, this.height - 1 - i].Red);
-                    }
-                    else if (((i < this.height / 2) && (j < this.width / 2)) || ((i > this.height / 2) && (j > this.width / 2)))
-                    {
-
-                        M[i, j] = new Pixel2(Mat7[this.width - j - 1, this.height - 1 - i].Blue, Mat7[this.width - j - 1, this.height - 1 - i].Green, Mat7[this.width - j - 1, this.height - 1 - i].Red);
-
-                    }
-                }
-            }
-
-
-            return M;
-        }
-
+        
+        /// <summary>
+        /// This method rotates the image using, as an axe of symetry, the ordinate axis.
+        /// </summary>
+        /// <returns>a matrix containing the pixel of the new image</returns>
         public Pixel2[,] Inverser_Image_axe_ordonnee()
         {
             Pixel2[,] Mat5;
             int a = 0;
-            if (m.Matrix.GetLength(0) < m.Matrix.GetLength(1))
-            {
-                a = m.Matrix.GetLength(1);
-            }
-            else if(m.Matrix.GetLength(0) > m.Matrix.GetLength(1))
-            {
-                a = m.Matrix.GetLength(0);
-            }
-            else
-            {
-                a = m.Matrix.GetLength(0);
-            }
+            
+            if (m.Matrix.GetLength(0) < m.Matrix.GetLength(1)) a = m.Matrix.GetLength(1);
+            
+            else if(m.Matrix.GetLength(0) > m.Matrix.GetLength(1)) a = m.Matrix.GetLength(0);
+            
+            else a = m.Matrix.GetLength(0);
+            
             Mat5 = new Pixel2[a,a];
+            
             for (int i = 0; i < a; i++)
             {
                 for (int j = 0; j < a; j++)
@@ -504,6 +518,11 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             //}
             return Mat5;
         }
+        
+        /// <summary>
+        /// This method rotates the image using, as an axe of symetry, the abscissa axis.
+        /// </summary>
+        /// <returns>a matrix containing the pixel of the new image</returns>
         public Pixel2[,] Inverser_Image_axe_abscisse()
         {
             Pixel2[,] Mat5 = new Pixel2[m.Matrix.GetLength(0), m.Matrix.GetLength(1)];
@@ -515,16 +534,15 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
                 }
             }
             return Mat5;
-        }
+        }        
+        
         public Pixel2[,] Aggrandissement(float zoom)
         {
-
             Pixel2[,] returned2 = new Pixel2[Convert.ToInt32(this.width * zoom), Convert.ToInt32(this.height * zoom)];
             int a = Convert.ToInt32(zoom);
 
             for (int i = 0; i < this.m.Matrix.GetLength(0); i++)
             {
-
                 for (int j = 0; j < this.m.Matrix.GetLength(1); j++)
                 {
                     byte b = m.Matrix[i, j].Blue;
@@ -537,11 +555,9 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
                         returned2[i * a + k, j * a] = new Pixel2(b, g, r);
                         returned2[i * a + k, j * a + k] = new Pixel2(b, g, r);
                     }
-
-
-
                 }
             }
+            
             //for(int i = 0; i < returned2.GetLength(0); i++)
             //{
             //    for (int j= 0; j < returned2.GetLength(1); j++)
@@ -550,17 +566,17 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             //    }
             //    Console.WriteLine();
             //}
+            
             return returned2;
         }
-        public Pixel2[,] reduction(float zoom)
+        
+        public Pixel2[,] Reduction(float zoom)
         {
-
             Pixel2[,] returned2 = new Pixel2[Convert.ToInt32(this.width / zoom), Convert.ToInt32(this.height / zoom)];
             int a = Convert.ToInt32(zoom);
 
             for (int i = 0; i < returned2.GetLength(0); i++)
             {
-
                 for (int j = 0; j < returned2.GetLength(1); j++)
                 {
                     byte b = m.Matrix[i * a, j * a].Blue;
@@ -569,15 +585,29 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
                     returned2[i, j] = new Pixel2(b, g, r);
                     //Console.Write(m.Matrix[i, j].Blue + " ");
                     //Console.Write(returned2[i, j].Blue+" ");
-
-
-
                 }
                 Console.WriteLine();
             }
+            
             //Console.Write(returned2.GetLength(0) + "dsfsg " + returned2.GetLength(1));
             return returned2; 
         }
+
+                
+        
+        
+        // Méthodes non triées :
+        
+        //public bool Verification(Pixel2[,] mat, int i, int j)
+        //{
+        //    bool flag = true;
+        //    if (mat[i, j] == null)
+        //    {
+        //        flag = false;
+        //    }
+        //    return flag;
+        //}
+        
         public Pixel2 Somme(int i,int j)
         {
             int somme = 0;
@@ -590,14 +620,13 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             Pixel2 a = new Pixel2(Convert.ToByte(somme / 9), Convert.ToByte(somme1 / 9), Convert.ToByte(somme2 / 9));
             return a;
         }
-        public Pixel2[,] bleutage()
-        {
-            
+        
+        public Pixel2[,] Bleutage()
+        {            
             Pixel2[,] Mat = new Pixel2[m.Matrix.GetLength(0), m.Matrix.GetLength(1)] ;
 
             for (int i = 0; i < m.Matrix.GetLength(0); i++)
             {
-
                 for (int j = 0; j < m.Matrix.GetLength(1); j++)
                 {
                     //byte a = m.Matrix[i + k, j + k]+
@@ -615,6 +644,7 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             }
             return Mat;
         }
+        
         /// <summary>
         /// les matrices de convolution utilisees sont de taille 3*3 pour l'instant
         /// </summary>
@@ -641,15 +671,13 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
         }
 
         public Pixel2[,] Floutage(byte[,] convolution)
-        {
-            
+        {            
             //|| j == 0 || i == m.Matrix.GetLength(0) - 1 || j == m.Matrix.GetLength(1) - 1
             Pixel2[,]Mat= new Pixel2[m.Matrix.GetLength(0), m.Matrix.GetLength(1)];
 
             int v = convolution.GetLength(0)/2;
             for (int i = 0; i < m.Matrix.GetLength(0); i++)
             {
-
                 for (int j = 0; j < m.Matrix.GetLength(1); j++)
                 {
                     if (i == 0)
@@ -684,13 +712,12 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
                     {
                         Mat[i, j] = Multiplication(i, j, convolution);
                     }
-                    
-                    
-
                 }
             }
+            
             return Mat;
         }
+        
         public Pixel2[,] Rotation(float angle)
         {
             float angle_in_radian = Convert.ToSingle((angle * Math.PI)/180);
@@ -698,7 +725,6 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             Pixel2[,] Mat =new Pixel2[2*a,2*a];
             int px = (Mat.GetLength(0) - m.Matrix.GetLength(0)) / 2;
             int py = (Mat.GetLength(1) - m.Matrix.GetLength(1)) / 2;
-
 
             for (int i = 0; i < m.Matrix.GetLength(0); i++)
             {
@@ -709,7 +735,6 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
                     byte b = m.Matrix[i, j].Blue;
                     byte g = m.Matrix[i, j].Green;
                     byte r = m.Matrix[i, j].Red;
-
 
                     if (angle==0||angle==360)
                     {
@@ -731,21 +756,20 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
                     {
                         Mat[x+2*px, y+py] = new Pixel2(b, g, r);
                     }
-
-
                 }
             }
+            
             for (int i = 0; i < Mat.GetLength(0); i++)
             {
                 for (int j = 0; j < Mat.GetLength(1); j++)
                 {
-
                     if (Mat[i, j] == null)
                     {
                         Mat[i, j] = new Pixel2(0, 0,0);
                     }
                 }
             }
+            
             for(int i = 1; i < Mat.GetLength(0)-1; i++)
             {
                 for(int j = 1; j < Mat.GetLength(1)-1; j++)
@@ -762,6 +786,7 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
 
             return Mat;
         }
+        
         /// <summary>
         /// Cette méthode permet d'appliquer une matrice de convolution à la matrice image.
         /// 
