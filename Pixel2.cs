@@ -25,26 +25,17 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
         public byte Red
         {
             get => this.red;
-            set
-            {
-                this.red = value;
-            }
+            set { this.red = value; }
         }
         public byte Green
         {
             get => this.green;
-            set
-            {
-                this.green = value;
-            }
+            set { this.green = value; }
         }
         public byte Blue
         {
             get => this.blue;
-            set
-            {
-                this.blue = value;
-            }
+            set { this.blue = value; }
         }
     }
 }
