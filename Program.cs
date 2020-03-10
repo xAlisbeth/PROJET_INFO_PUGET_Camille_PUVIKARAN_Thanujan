@@ -79,6 +79,10 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
                 Console.ReadLine();
             
         }
+        
+        /// <summary>
+        /// Main program. For now, it's just used for testing every other methods.
+        /// </summary>
         static void Main(string[] args)
         {
             MyImage a = new MyImage("./Images/lena.bmp");
@@ -89,10 +93,9 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             //Pixel2[,] Mat7 = a.Inverser_Image_axe_abscisse();
             //Pixel2[,] Mat8 = a.Rotation270();
             Pixel2[,] Mat9 = a.Aggrandissement(2);
-
             Pixel2[,] Mat10 = a.rotate_with_angles(0);
-            Pixel2[,] Mat11 = a.reduction(2) ;
-            Pixel2[,] mat=new Pixel2[a.M.Matrix.GetLength(0), a.M.Matrix.GetLength(1)];
+            Pixel2[,] Mat11 = a.reduction(2) ;            
+            Pixel2[,] mat = new Pixel2[a.M.Matrix.GetLength(0), a.M.Matrix.GetLength(1)];
             byte[,] convolution = new byte[3,3]{ { 0, 1, 0 }, { 0, 0, 0 }, { 0, 0, 0 } } ;
             
             Pixel2[,] Mat12 = a.bleutage();
