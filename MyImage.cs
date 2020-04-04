@@ -9,7 +9,6 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
 {
     class MyImage
     {
-
         // attributes
         private int[] type;
         private int length;
@@ -27,7 +26,6 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
         // constructor
         public MyImage(string Myfile)
         {
-
             ReadFile(Myfile);
             compteur++;
         }
@@ -80,6 +78,18 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             get => this.header;
             set => this.header = value;
         }
+        
+        // methods
+        
+        
+        /// <summary>
+        /// Take the array of all of the image's bytes to check the type
+        /// of the image by reading the value of some of the array's elements.
+        ///
+        /// The "this.offset" line precises the beginning at which me must start filling the matrix of pixels.
+        /// </summary>
+        /// <param name="file">array of bytes which will be made of every of the image's bytes</param>
+        /// <returns>returns an array containing the infos about the size of the image which was just read before</returns>
         public int[] finding_type(byte[] file)
         {
             this.type = new int[3];
@@ -92,11 +102,12 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             }
             return this.type;
         }
+        
         /// <summary>
-        /// Take a tab
+        /// This method takes an array containing the four bytes of the image's size and converts it into a decimal number.
         /// </summary>
-        /// <param name="tab"></param>
-        /// <returns></returns>
+        /// <param name="tab">array containing the four bytes with the image's size</param>
+        /// <returns>an integer which is the number of pixels in the image</returns>
         public int Taille(int[] tab)
         {
             int taille = 0;
@@ -107,6 +118,13 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             }
             return taille;
         }   
+        
+        /// <summary>
+        /// Take an array containing all of the image's bytes, and a integer indicating the start of the four bytes containing the image's size.
+        /// </summary>
+        /// <param name="file">array containing all of the image's bytes</param>
+        /// <param name="debut">integer indicating the start of the four bytes containing the image's size</param>
+        /// <returns>an array with the four bytes of the image's size</returns>
         public int[] newLength(byte[] file, int debut)
         {
             int[] tab = new int[4];
@@ -116,10 +134,13 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             }
             return tab;
         }
+        
         /// <summary>
-        /// from file to image
+        /// This method reads the image (here called filename) and all of its data is concealed in the byte array file.
+        /// Then, we just write on the console all of the header informations, and create a matrix containing all of the image's pixels.
+        /// For that, we created the class Pixel2.
         /// </summary>
-        /// <param name="filename"></param>
+        /// <param name="filename">name of the file (here, an image) we want to read</param>
         public void ReadFile(string filename)
         {
            
@@ -158,11 +179,6 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             Console.WriteLine("this.Width = " + this.width);
             Console.WriteLine("this.Height = " + this.height);
 
-
-
-
-
-
             //L'image elle-même
             //Console.WriteLine("\n IMAGE \n");
 
@@ -190,6 +206,7 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             //}
             //m.Matrix[36, 0] = new Pixel2(255,255,0);
             //Console.WriteLine(compteur1);
+            
             if (compteur != 2)
             {
                 Console.Write("Que voulez vous faire, voulez vous utiliser des fonctions du type modification ou juste afficher l'image " + "\n" + "d image pre-existante ou voulez une fractale ou encore un histogramme,");
@@ -212,6 +229,7 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
                     }
                     m.Matrix = Remodelage();
                 }
+                
                 else
                 {
                     Console.Write("Qr_code ? si oui tapez true sinon false  :");
@@ -236,6 +254,7 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
                     }
                 }
             }
+            
             else
             {
                 int compteur = 0;
@@ -254,6 +273,13 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             Console.WriteLine("Clear");
 
         }
+        
+        /// <summary>
+        /// WHAT
+        /// </summary>
+        /// <param name="NAME">WHAT</param>
+        /// <param name="NAME">WHAT</param>
+        /// <returns>WHAT'S RETURNED</returns>
         public Pixel2[,] Remodelage()
         {
             Pixel2[,] mat = m.Matrix;
@@ -310,9 +336,13 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             return Mat5;
         }
 
+        /// <summary>
+        /// This method does something that I can't translate (nor understand) yet.
+        /// </summary>
+        /// <param name="Mat"> I DON'T KNOW </param>
+        /// <param name="file"> I DON'T KNOW </param>
         public void From_Image_To_File(Pixel2[,] Mat, string file)
         {
-
             byte[] returned = new byte[this.header.Length + (Mat.GetLength(0) * Mat.GetLength(1) * 3)];
             this.width = Mat.GetLength(0);
             this.height = Mat.GetLength(1);
@@ -397,6 +427,12 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             Console.WriteLine("ARRIVEE !");
             File.WriteAllBytes(file, returned);
         }
+        
+        /// <summary>
+        /// This method converts an integer into a endian number.
+        /// </summary>
+        /// <param name="value">value in integer</param>
+        /// <returns>a byte array containing the bytes of the endian number</returns>
         public byte[] Convertir_Int_To_Endian(int value)
         {
             byte[] tab = new byte[4];
@@ -417,6 +453,7 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             Console.WriteLine();
             return tab;
         }
+        
         //public int verification_angle(int angle)
         //{
         //    while ((angle < 0) || (angle > 360))
@@ -520,7 +557,11 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
         //    return Mat2;
         //}
 
-        public Pixel2[,] negatif()
+        /// <summary>
+        /// This method reverses the colors of the image.
+        /// </summary>
+        /// <returns>a matrix containing the pixel of the new image</returns>
+        public Pixel2[,] Negatif()
         {
             Pixel2[,] Mat3 = new Pixel2[m.Matrix.GetLength(0), m.Matrix.GetLength(1)];
             for (int i = 0; i < Mat3.GetLength(0); i++)
@@ -538,6 +579,11 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
         }
         ///uint pour les entiers non signés
         //public byte convert()
+        
+        /// <summary>
+        /// This method rotates the image by 180°.
+        /// </summary>
+        /// <returns>a matrix containing the pixel of a new image, rotated by 180°</returns>
         public Pixel2[,] Rotation180()
         {
             int[] centre = new int[2];
@@ -563,6 +609,11 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             }
             return Mat4;
         }
+        
+        /// <summary>
+        /// This method rotates the image by 90°.
+        /// </summary>
+        /// <returns>a matrix containing the pixel of a new image, rotated by 90°</returns>
         public Pixel2[,] Rotation90()
         {
 
@@ -598,6 +649,10 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
 
         }
 
+        /// <summary>
+        /// This method rotates the image by 270°.
+        /// </summary>
+        /// <returns>a matrix containing the pixel of a new image, rotated by 270°</returns>
         public Pixel2[,] Rotation270()
         {
             Pixel2[,] M = new Pixel2[m.Matrix.GetLength(1), m.Matrix.GetLength(0)];
@@ -635,9 +690,12 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             return M;
         }
 
+        /// <summary>
+        /// This method rotates the image using, as an axe of symetry, the ordinate axis.
+        /// </summary>
+        /// <returns>a matrix containing the pixel of the new image</returns>
         public Pixel2[,] Inverser_Image_axe_ordonnee()
         {
-
             ////for (int i = 0; i < Mat5.GetLength(1); i++) Mat5[0, i] = new Pixel2(0, 255, 0);
             ////for (int i = 0; i < b; i++) mat[0, i] = new Pixel2(255, 0, 0);
             Pixel2[,] Mat6 = new Pixel2[m.Matrix.GetLength(0), m.Matrix.GetLength(1)];
@@ -651,6 +709,11 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             }
             return Mat6;
         }
+        
+        /// <summary>
+        /// This method rotates the image using, as an axe of symetry, the abscissa axis.
+        /// </summary>
+        /// <returns>a matrix containing the pixel of the new image</returns>
         public Pixel2[,] Inverser_Image_axe_abscisse()
         {
             int a = m.Matrix.GetLength(0);
@@ -664,6 +727,13 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             }
             return Mat5;
         }
+        
+        /// <summary>
+        /// This method does something that I can't translate yet. En gros ça agrandit une partie de l'image en fonction de l'abscisse et de l'ordonnées entrées en paramètre.
+        /// </summary>
+        /// <param name="abscisse">abscissa at which you want to start zooming on the image</param>
+        /// <param name="ordonne">ordinate at which you want to start zooming on the image</param>
+        /// <returns>a matrix containing the pixel of the new image</returns>
         public Pixel2[,] Aggrandissement(float zoom)
         {
             int c = m.Matrix.GetLength(0);
@@ -690,9 +760,6 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
                             returned2[i * a + k, j * a + l] = new Pixel2(b, g, r);
                         }
                     }
-
-
-
                 }
             }
             //for(int i = 0; i < returned2.GetLength(0); i++)
@@ -705,6 +772,12 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             //}
             return returned2;
         }
+        
+        /// <summary>
+        /// Reduces the size of the image by zooming on it.
+        /// </summary>
+        /// <param name="zoom">how much you want to zoom on the image (2 = *2)</param>
+        /// <returns>a matrix of the image's pixels</returns>
         public Pixel2[,] reduction(float zoom)
         {
             int c = m.Matrix.GetLength(0);
@@ -732,6 +805,13 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             //Console.Write(returned2.GetLength(0) + "dsfsg " + returned2.GetLength(1));
             return returned2; 
         }
+        
+        /// <summary>
+        /// WHAT
+        /// </summary>
+        /// <param name="NAME">WHAT</param>
+        /// <param name="NAME">WHAT</param>
+        /// <returns>WHAT'S RETURNED</returns>
         public Pixel2 Somme(int i,int j)
         {
             int somme = 0;
@@ -744,6 +824,13 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             Pixel2 a = new Pixel2(Convert.ToByte(somme / 9), Convert.ToByte(somme1 / 9), Convert.ToByte(somme2 / 9));
             return a;
         }
+        
+        /// <summary>
+        /// WHAT
+        /// </summary>
+        /// <param name="NAME">WHAT</param>
+        /// <param name="NAME">WHAT</param>
+        /// <returns>WHAT'S RETURNED</returns>
         public Pixel2[,] bleutage()
         {
             
@@ -770,6 +857,12 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             return Mat;
         }
         
+        /// <summary>
+        /// WHAT
+        /// </summary>
+        /// <param name="NAME">WHAT</param>
+        /// <param name="NAME">WHAT</param>
+        /// <returns>WHAT'S RETURNED</returns>
         public Pixel2 Multiplication(int x, int y, int[,] convolution,string type)
         {
             int b = 0;
@@ -860,6 +953,12 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
             return ab;
         }
 
+        /// <summary>
+        /// WHAT
+        /// </summary>
+        /// <param name="NAME">WHAT</param>
+        /// <param name="NAME">WHAT</param>
+        /// <returns>WHAT'S RETURNED</returns>
         public Pixel2[,] Floutage_etc(int[,] convolution)
         {
             Console.Write("est ce floutage?");
@@ -972,6 +1071,12 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
         //    }
         //    return returned;
         //}
+        
+        /// <summary>
+        /// This method rotates the image by an angle chosen by the user.
+        /// </summary>
+        /// <returns>a matrix containing the pixels of the new image</returns>
+        /// <param name="angle">angle at which you wish to turn your image</param>
         public Pixel2[,] Rotation(float angle)
         {
             float angle_in_radian = Convert.ToSingle((angle * Math.PI)/180);
