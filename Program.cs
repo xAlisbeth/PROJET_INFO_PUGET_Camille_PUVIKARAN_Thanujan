@@ -323,6 +323,7 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
                 else
                 {
                     //QR code function
+                    Program.LancementQRCode();
                 }
             } 
 
@@ -422,6 +423,39 @@ namespace PROJET_INFO_PUGET_Camille_PUVIKARAN_Thanujan
         {
             int saisie = Convert.ToInt32(Console.ReadLine());
             return saisie;
+        }
+        
+        static public void LancementQRCode()
+        {
+            Fractale_image_cache testoune = new Fractale_image_cache();
+
+            Console.Write("Entrez votre message : ");
+            string message = Console.ReadLine();
+
+            while (message.Length > 25)
+            {
+                Console.WriteLine();
+                Console.Write("C'est trop long ! Entrez votre message :");
+                message = Console.ReadLine();
+            }
+
+            QRCode Test1QRCode = new QRCode(message);
+            Pixel2[,] recupTest = Test1QRCode.TestFonctionnement();
+
+            Pixel2[,] recupTemp = new Pixel2[recupTest.GetLength(0), recupTest.GetLength(1)];
+
+            int a = recupTest.GetLength(0);
+            for (int i = 0; i < recupTest.GetLength(0); i++)
+            {
+                for (int j = 0; j < recupTest.GetLength(1); j++)
+                {
+                    recupTemp[i, j] = new Pixel2(recupTest[a - 1 - i, j].Blue, recupTest[a - 1 - i, j].Green, recupTest[a - 1 - i, j].Red);
+                }
+            }
+
+            testoune.From_fractale_toFile(recupTemp, "./Images/TEST207.bmp");
+
+            Console.ReadKey();
         }
 
     }
